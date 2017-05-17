@@ -1,43 +1,25 @@
 package threescale.v3.api.impl;
 
-import threescale.v3.api.HttpResponse;
-import threescale.v3.api.ServerAccessor;
-import threescale.v3.api.ServerError;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import java.util.Properties;
+import threescale.v3.api.HttpResponse;
+import threescale.v3.api.ServerAccessor;
+import threescale.v3.api.ServerError;
+
 /**
  * Performs GET's and POST's against the live 3Scale Server
  */
-public class ServerAccessorDriver implements ServerAccessor {
+public class DefaultServerAccessor extends AbstractServerAccessor implements ServerAccessor {
 	
-	private Properties props;
-	private String pluginHeaderValue;
-	private String defaultVersion = "3.1";
-    public ServerAccessorDriver() {
-
-        
-    	props = new Properties();
-        try {
-        	InputStream in = ServerAccessorDriver.class.getClassLoader().getResourceAsStream("props.properties");
-        	if (in == null) {
-        		System.out.println("props.properties not found");
-        	}
-        	else{
-        		props.load(in);
-        		defaultVersion = props.getProperty(MAVEN_PROJECT_VERSION);
-        	}
-        	
-            
-        } catch (Exception e) {
-        	System.out.println(e);
-        }   	
-		pluginHeaderValue = X_3SCALE_USER_CLIENT_HEADER_JAVA_PLUGIN+defaultVersion;
-
+    public DefaultServerAccessor() {
+    	super();
     }
 
     /**
@@ -66,9 +48,7 @@ public class ServerAccessorDriver implements ServerAccessor {
             
             connection.connect();
 
-
             return new HttpResponse(connection.getResponseCode(), getBody(connection.getInputStream()));
-
         } catch (IOException ex) {
             try {
                 return new HttpResponse(connection.getResponseCode(), getBody(connection.getErrorStream()));
@@ -104,7 +84,7 @@ public class ServerAccessorDriver implements ServerAccessor {
      * @throws ServerError
      * @see ServerAccessor
      */
-    public HttpResponse post(final String urlParams,final String data) throws ServerError {
+    public HttpResponse post(final String urlParams, final String data) throws ServerError {
         HttpURLConnection connection = null;
         OutputStreamWriter wr;
         URL url;
@@ -124,7 +104,6 @@ public class ServerAccessorDriver implements ServerAccessor {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty(X_3SCALE_USER_CLIENT_HEADER, pluginHeaderValue); 
 
-
             connection.connect();
             wr = new OutputStreamWriter(connection.getOutputStream());
             wr.write(data);
@@ -140,7 +119,7 @@ public class ServerAccessorDriver implements ServerAccessor {
             }
         }  catch (NullPointerException npe) {
         	throw new ServerError("NullPointerException thrown ServerAccessorDriver::post, urlParams were "+urlParams+", data was "+data);
-        }finally {
+        } finally {
             if (connection != null) {
                 connection.disconnect();
             }

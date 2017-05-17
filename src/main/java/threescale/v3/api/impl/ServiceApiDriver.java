@@ -36,7 +36,7 @@ public class ServiceApiDriver implements ServiceApi {
     private ServerAccessor server = null;
 
     public ServiceApiDriver() {
-        this.server = new ServerAccessorDriver();
+        this.server = new AsyncServerAccessor();
     }
 
     /**
@@ -45,7 +45,7 @@ public class ServiceApiDriver implements ServiceApi {
     @Deprecated
     public ServiceApiDriver(String provider_key) {
         this.provider_key = provider_key;
-        this.server = new ServerAccessorDriver();
+        this.server = new AsyncServerAccessor();
     }
     
     /**
@@ -55,7 +55,7 @@ public class ServiceApiDriver implements ServiceApi {
     public ServiceApiDriver(String provider_key, boolean useHttps) {
         this.provider_key = provider_key;
         this.useHttps = useHttps;
-        this.server = new ServerAccessorDriver();
+        this.server = new AsyncServerAccessor();
     }
 
     /**
@@ -65,7 +65,7 @@ public class ServiceApiDriver implements ServiceApi {
     public ServiceApiDriver(String provider_key, String host) {
         this.provider_key = provider_key;
         this.host = host;
-        this.server = new ServerAccessorDriver();
+        this.server = new AsyncServerAccessor();
     }
     
     /**
@@ -76,7 +76,7 @@ public class ServiceApiDriver implements ServiceApi {
         this.provider_key = provider_key;
         this.host = host;
         this.useHttps = useHttps;
-        this.server = new ServerAccessorDriver();
+        this.server = new AsyncServerAccessor();
     }
     
     /* (non-Javadoc)

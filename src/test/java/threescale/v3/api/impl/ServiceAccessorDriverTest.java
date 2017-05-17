@@ -15,7 +15,7 @@ import threescale.v3.api.ServerError;
  */
 
 public class ServiceAccessorDriverTest {
-	private ServerAccessorDriver underTest = new ServerAccessorDriver();;
+	private DefaultServerAccessor underTest = new DefaultServerAccessor();;
 
 		
     @Before
